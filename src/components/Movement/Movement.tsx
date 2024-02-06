@@ -57,20 +57,12 @@ class Guy {
     document.addEventListener('keyup', (event) => {
       switch (event.key) {
         case 'ArrowRight':
-          clearInterval(this.moveIntervalX);
-          this.moveIntervalX = undefined;
-          break;
         case 'ArrowLeft':
-          clearInterval(this.moveIntervalX);
-          this.moveIntervalX = undefined;
+          this.clearIntervalX();
           break;
         case 'ArrowDown':
-          clearInterval(this.moveIntervalY);
-          this.moveIntervalY = undefined;
-          break;
         case 'ArrowUp':
-          clearInterval(this.moveIntervalY);
-          this.moveIntervalY = undefined;
+          this.clearIntervalY();
           break;
       }
     });
@@ -96,6 +88,16 @@ class Guy {
 
     this.elem.style.left = this.posX + 'px';
     this.elem.style.top = this.posY + 'px';
+  }
+
+  clearIntervalX() {
+    clearInterval(this.moveIntervalX);
+    this.moveIntervalX = undefined;
+  }
+
+  clearIntervalY() {
+    clearInterval(this.moveIntervalY);
+    this.moveIntervalY = undefined;
   }
 }
 
