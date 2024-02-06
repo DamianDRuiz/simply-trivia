@@ -5,13 +5,24 @@ type Styles = {
 };
 
 type KeyMappings = {
-  [key: string]: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
+  [key: string]: Arrow;
 };
+
+type Arrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 
 type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
 class Guy {
   private elem: HTMLDivElement;
+  private moveIntervalX?: NodeJS.Timeout;
+  private moveIntervalY?: NodeJS.Timeout;
+  private keyMappings: KeyMappings;
+  private tickInterval: number = 10;
+  private speed: number = 5;
+  private posX: number = 0;
+  private posY: number = 0;
+  private xAxis: Arrow[] = ['ArrowLeft', 'ArrowRight'];
+  private yAxis: Arrow[] = ['ArrowUp', 'ArrowDown'];
   private style: Styles = {
     background: 'red',
     display: 'inline-block',
@@ -21,13 +32,6 @@ class Guy {
     top: '0',
     left: '0',
   };
-  private tickInterval: number = 10;
-  private speed: number = 5;
-  private posX: number = 0;
-  private posY: number = 0;
-  private moveIntervalX?: NodeJS.Timeout;
-  private moveIntervalY?: NodeJS.Timeout;
-  private keyMappings: KeyMappings;
 
   constructor(element: string, keyMappings?: KeyMappings) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
@@ -55,24 +59,24 @@ class Guy {
     document.addEventListener('keyup', (event) => this.handleKeyRelease(event));
   }
 
-  private mapKey(key: string): string {
+  private mapKey(key: string): Arrow {
     return this.keyMappings[key];
   }
 
   private handleKeyPress(event: KeyboardEvent): void {
     const key = this.mapKey(event.key);
-    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+    if (this.xAxis.includes(key)) {
       this.startMovementInterval(key, 'moveIntervalX');
-    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
+    } else if (this.yAxis.includes(key)) {
       this.startMovementInterval(key, 'moveIntervalY');
     }
   }
 
   private handleKeyRelease(event: KeyboardEvent): void {
     const key = this.mapKey(event.key);
-    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+    if (this.xAxis.includes(key)) {
       this.clearInterval('moveIntervalX');
-    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
+    } else if (this.yAxis.includes(key)) {
       this.clearInterval('moveIntervalY');
     }
   }
