@@ -14,9 +14,9 @@ type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
 class Guy {
   private elem: HTMLDivElement;
+  private keyMappings: KeyMappings;
   private moveIntervalX?: NodeJS.Timeout;
   private moveIntervalY?: NodeJS.Timeout;
-  private keyMappings: KeyMappings;
   private tickInterval: number = 10;
   private speed: number = 5;
   private posX: number = 0;
