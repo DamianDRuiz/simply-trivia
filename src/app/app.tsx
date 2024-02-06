@@ -1,12 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-
-import NxWelcome from './nx-welcome';
+import SimplyTrivia from '../components/SimplyTrivia/SimplyTrivia';
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="simply-trivia" />
+      <SimplyTrivia />
     </div>
   );
 }
