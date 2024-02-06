@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import styles from './Movement.module.scss';
+import { hearts } from './hearts';
 
 type Styles = {
   [key: string]: string;
@@ -19,8 +21,8 @@ class Guy {
   private moveIntervalY?: NodeJS.Timeout;
   private tickInterval: number = 10;
   private speed: number = 5;
-  private posX: number = 0;
-  private posY: number = 0;
+  private posX: number;
+  private posY: number;
   private xAxis: Arrow[] = ['ArrowLeft', 'ArrowRight'];
   private yAxis: Arrow[] = ['ArrowUp', 'ArrowDown'];
   private style: Styles = {
@@ -29,18 +31,19 @@ class Guy {
     position: 'absolute',
     width: '50px',
     height: '50px',
-    top: '0',
-    left: '0',
   };
 
-  constructor(element: string, keyMappings?: KeyMappings) {
+  constructor(element: string, keyMappings?: KeyMappings, pos?: number[]) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
+
     this.keyMappings = keyMappings || {
       ArrowUp: 'ArrowUp',
       ArrowDown: 'ArrowDown',
       ArrowLeft: 'ArrowLeft',
       ArrowRight: 'ArrowRight',
     };
+
+    [this.posX, this.posY] = pos || [50, 50];
 
     this.init();
   }
@@ -51,6 +54,11 @@ class Guy {
   }
 
   private stylize(): void {
+    this.style = {
+      ...this.style,
+      left: this.posX + 'px',
+      top: this.posY + 'px',
+    };
     Object.assign(this.elem.style, this.style);
   }
 
@@ -118,8 +126,28 @@ class Guy {
 }
 
 export function Movement() {
+  const [typedWord, setTypedWord] = useState('');
+  const love = () => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const pressedKey = event.key.toLowerCase();
+      const newTypedWord = (typedWord + pressedKey).slice(-4); // Keep only the last 4 characters
+      if (newTypedWord === 'love') {
+        document.querySelector('#guy1')?.classList.add(`${styles.glow}`);
+        hearts();
+      }
+      setTypedWord(newTypedWord);
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  };
+
+  useEffect(() => love(), [typedWord]);
+
   useEffect(() => {
-    new Guy('guy1');
+    new Guy('guy1', undefined, [100, 100]);
     new Guy('guy2', {
       w: 'ArrowUp',
       s: 'ArrowDown',
@@ -130,7 +158,7 @@ export function Movement() {
 
   return (
     <>
-      <div id="guy1"></div>
+      <div id="guy1" className="effects-text"></div>
       <div id="guy2"></div>
     </>
   );
