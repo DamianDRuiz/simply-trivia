@@ -1,16 +1,22 @@
 import { useEffect } from 'react';
 
+interface Styles {
+  [key: string]: string;
+}
+
 class Guy {
-  elem: HTMLDivElement | null;
-  style;
+  elem: HTMLDivElement;
+  style: Styles;
+  tickInterval: number;
   speed: number;
   posX: number;
   posY: number;
-  moveIntervalX: NodeJS.Timer | undefined;
-  moveIntervalY: NodeJS.Timer | undefined;
+  moveIntervalX?: NodeJS.Timeout;
+  moveIntervalY?: NodeJS.Timeout;
 
   constructor() {
-    this.elem = document.querySelector('#guy');
+    this.elem = document.querySelector('#guy') as HTMLDivElement;
+    this.tickInterval = 10;
     this.speed = 5;
     this.posX = 0;
     this.posY = 0;
@@ -24,64 +30,52 @@ class Guy {
       left: '0',
     };
 
-    if (this.elem == null) return;
-
     this.init();
   }
 
-  init() {
-    if (this.elem == null) return;
+  private init(): void {
     this.stylize(this.elem, this.style);
     this.eventListeners();
   }
 
-  stylize(e: HTMLDivElement, styles: Styles) {
-    for (const property in styles) e.style[property as any] = styles[property];
+  private stylize(element: HTMLElement, styles: Styles): void {
+    Object.assign(element.style, styles);
   }
 
-  eventListeners(): void {
+  private eventListeners(): void {
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
     document.addEventListener('keyup', this.handleKeyUp.bind(this));
   }
 
-  handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      this.handleXMovement(event.key);
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      this.handleYMovement(event.key);
+  private handleKeyDown(event: KeyboardEvent): void {
+    const { key } = event;
+    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+      this.handleMovement(key, 'moveIntervalX');
+    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
+      this.handleMovement(key, 'moveIntervalY');
     }
   }
 
-  handleXMovement(key: string) {
-    if (this.moveIntervalX !== undefined) return;
-    this.moveIntervalX = setInterval(() => {
+  private handleMovement(
+    key: string,
+    intervalName: 'moveIntervalX' | 'moveIntervalY'
+  ): void {
+    if (this[intervalName] !== undefined) return;
+    this[intervalName] = setInterval(() => {
       this.move(key);
-    }, 50);
+    }, this.tickInterval);
   }
 
-  handleYMovement(key: string) {
-    if (this.moveIntervalY !== undefined) return;
-    this.moveIntervalY = setInterval(() => {
-      this.move(key);
-    }, 50);
-  }
-
-  handleKeyUp(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowLeft':
-        this.clearIntervalX();
-        break;
-      case 'ArrowDown':
-      case 'ArrowUp':
-        this.clearIntervalY();
-        break;
+  private handleKeyUp(event: KeyboardEvent): void {
+    const { key } = event;
+    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+      this.clearIntervalX();
+    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
+      this.clearIntervalY();
     }
   }
 
-  move(key: string) {
-    if (this.elem == null) return;
-
+  private move(key: string): void {
     switch (key) {
       case 'ArrowRight':
         this.posX += this.speed;
@@ -101,12 +95,12 @@ class Guy {
     this.elem.style.top = this.posY + 'px';
   }
 
-  clearIntervalX() {
+  private clearIntervalX(): void {
     clearInterval(this.moveIntervalX);
     this.moveIntervalX = undefined;
   }
 
-  clearIntervalY() {
+  private clearIntervalY(): void {
     clearInterval(this.moveIntervalY);
     this.moveIntervalY = undefined;
   }
@@ -119,9 +113,5 @@ export function Movement() {
 
   return <div id="guy"></div>;
 }
-
-type Styles = {
-  [key: string]: string;
-};
 
 export default Movement;
