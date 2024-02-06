@@ -1,9 +1,9 @@
-import SimplyTrivia from '../components/SimplyTrivia/SimplyTrivia';
+import Movement from '../components/Movement/Movement';
 
 export function App() {
   return (
     <div>
-      <SimplyTrivia />
+      <Movement />
     </div>
   );
 }

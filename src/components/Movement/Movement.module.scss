@@ -1,0 +1,23 @@
+/*
+ * Replace this with your own classes
+ *
+ * e.g.
+ * .container {
+ * }
+*/
+.container {
+  position: relative;
+}
+.guy {
+  display: inline-block;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  left: 0;
+  background-color: blue;
+}
+
+.start {
+  margin-top: 200px;
+}
