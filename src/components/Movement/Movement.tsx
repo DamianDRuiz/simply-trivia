@@ -39,33 +39,44 @@ class Guy {
     for (const property in styles) e.style[property as any] = styles[property];
   }
 
-  eventListeners() {
-    document.addEventListener('keydown', (event) => {
-      if (event.key == 'ArrowLeft' || event.key == 'ArrowRight') {
-        if (this.moveIntervalX != undefined) return;
-        this.moveIntervalX = setInterval(() => {
-          this.move(event.key);
-        }, 50);
-      } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
-        if (this.moveIntervalY != undefined) return;
-        this.moveIntervalY = setInterval(() => {
-          this.move(event.key);
-        }, 50);
-      }
-    });
+  eventListeners(): void {
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('keyup', this.handleKeyUp.bind(this));
+  }
 
-    document.addEventListener('keyup', (event) => {
-      switch (event.key) {
-        case 'ArrowRight':
-        case 'ArrowLeft':
-          this.clearIntervalX();
-          break;
-        case 'ArrowDown':
-        case 'ArrowUp':
-          this.clearIntervalY();
-          break;
-      }
-    });
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      this.handleXMovement(event.key);
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      this.handleYMovement(event.key);
+    }
+  }
+
+  handleXMovement(key: string) {
+    if (this.moveIntervalX !== undefined) return;
+    this.moveIntervalX = setInterval(() => {
+      this.move(key);
+    }, 50);
+  }
+
+  handleYMovement(key: string) {
+    if (this.moveIntervalY !== undefined) return;
+    this.moveIntervalY = setInterval(() => {
+      this.move(key);
+    }, 50);
+  }
+
+  handleKeyUp(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowLeft':
+        this.clearIntervalX();
+        break;
+      case 'ArrowDown':
+      case 'ArrowUp':
+        this.clearIntervalY();
+        break;
+    }
   }
 
   move(key: string) {
