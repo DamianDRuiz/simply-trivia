@@ -19,7 +19,7 @@ class Guy {
   private moveIntervalY?: NodeJS.Timeout;
   private readonly keyMappings: KeyMappings;
 
-  constructor(element: string, keyMapping?: KeyMappings) {
+  constructor(element: string, keyMappings?: KeyMappings) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
     this.tickInterval = 10;
     this.speed = 5;
@@ -34,7 +34,7 @@ class Guy {
       top: '0',
       left: '0',
     };
-    this.keyMappings = keyMapping || {
+    this.keyMappings = keyMappings || {
       ArrowUp: 'ArrowUp',
       ArrowDown: 'ArrowDown',
       ArrowLeft: 'ArrowLeft',
