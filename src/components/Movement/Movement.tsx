@@ -12,30 +12,25 @@ type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
 class Guy {
   private elem: HTMLDivElement;
-  private readonly style: Styles;
-  private readonly tickInterval: number;
-  private readonly speed: number;
-  private posX: number;
-  private posY: number;
+  private style: Styles = {
+    background: 'red',
+    display: 'inline-block',
+    position: 'absolute',
+    width: '50px',
+    height: '50px',
+    top: '0',
+    left: '0',
+  };
+  private tickInterval: number = 10;
+  private speed: number = 5;
+  private posX: number = 0;
+  private posY: number = 0;
   private moveIntervalX?: NodeJS.Timeout;
   private moveIntervalY?: NodeJS.Timeout;
-  private readonly keyMappings: KeyMappings;
+  private keyMappings: KeyMappings;
 
   constructor(element: string, keyMappings?: KeyMappings) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
-    this.tickInterval = 10;
-    this.speed = 5;
-    this.posX = 0;
-    this.posY = 0;
-    this.style = {
-      background: 'red',
-      display: 'inline-block',
-      position: 'absolute',
-      width: '50px',
-      height: '50px',
-      top: '0',
-      left: '0',
-    };
     this.keyMappings = keyMappings || {
       ArrowUp: 'ArrowUp',
       ArrowDown: 'ArrowDown',
@@ -56,8 +51,8 @@ class Guy {
   }
 
   private eventListeners(): void {
-    document.addEventListener('keydown', this.handleKeyPress.bind(this));
-    document.addEventListener('keyup', this.handleKeyRelease.bind(this));
+    document.addEventListener('keydown', (event) => this.handleKeyPress(event));
+    document.addEventListener('keyup', (event) => this.handleKeyRelease(event));
   }
 
   private mapKey(key: string): string {
