@@ -4,6 +4,8 @@ interface Styles {
   [key: string]: string;
 }
 
+type KeyMapping = { [key: string]: string };
+
 class Guy {
   elem: HTMLDivElement;
   style: Styles;
@@ -13,9 +15,10 @@ class Guy {
   posY: number;
   moveIntervalX?: NodeJS.Timeout;
   moveIntervalY?: NodeJS.Timeout;
+  keyMapping: KeyMapping;
 
-  constructor() {
-    this.elem = document.querySelector('#guy') as HTMLDivElement;
+  constructor(element: string, keyMapping?: KeyMapping) {
+    this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
     this.tickInterval = 10;
     this.speed = 5;
     this.posX = 0;
@@ -28,6 +31,12 @@ class Guy {
       height: '50px',
       top: '0',
       left: '0',
+    };
+    this.keyMapping = keyMapping || {
+      ArrowUp: 'ArrowUp',
+      ArrowDown: 'ArrowDown',
+      ArrowLeft: 'ArrowLeft',
+      ArrowRight: 'ArrowRight',
     };
 
     this.init();
@@ -47,8 +56,13 @@ class Guy {
     document.addEventListener('keyup', this.handleKeyUp.bind(this));
   }
 
+  private getMappedKey(key: string): string {
+    return this.keyMapping[key];
+  }
+
   private handleKeyDown(event: KeyboardEvent): void {
-    const { key } = event;
+    let { key } = event;
+    key = this.getMappedKey(key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
       this.handleMovement(key, 'moveIntervalX');
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
@@ -67,7 +81,8 @@ class Guy {
   }
 
   private handleKeyUp(event: KeyboardEvent): void {
-    const { key } = event;
+    let { key } = event;
+    key = this.getMappedKey(key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
       this.clearIntervalX();
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
@@ -108,10 +123,21 @@ class Guy {
 
 export function Movement() {
   useEffect(() => {
-    new Guy();
+    new Guy('guy1');
+    new Guy('guy2', {
+      w: 'ArrowUp',
+      s: 'ArrowDown',
+      a: 'ArrowLeft',
+      d: 'ArrowRight',
+    });
   }, []);
 
-  return <div id="guy"></div>;
+  return (
+    <>
+      <div id="guy1"></div>
+      <div id="guy2"></div>
+    </>
+  );
 }
 
 export default Movement;
