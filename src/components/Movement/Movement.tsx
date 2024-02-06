@@ -14,6 +14,8 @@ type Arrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 
 type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
+type PositioningCoords = [number, number];
+
 class Guy {
   private elem: HTMLDivElement;
   private keyMappings: KeyMappings;
@@ -33,7 +35,11 @@ class Guy {
     height: '50px',
   };
 
-  constructor(element: string, keyMappings?: KeyMappings, pos?: number[]) {
+  constructor(
+    element: string,
+    keyMappings?: KeyMappings,
+    pos?: PositioningCoords
+  ) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
 
     this.keyMappings = keyMappings || {
