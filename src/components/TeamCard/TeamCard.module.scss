@@ -5,3 +5,19 @@
  * .container {
  * }
 */
+
+.container {
+  flex: 1 1 50%;
+  max-width: 50%;
+  box-sizing: border-box;
+}
+
+.inner {
+  margin: 30px;
+  padding: 20px;
+  background-color: #f02d6e;
+}
+
+.container:nth-of-type(even) .inner {
+  margin-left: 0;
+}

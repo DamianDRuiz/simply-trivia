@@ -5,3 +5,11 @@
  * .container {
  * }
 */
+
+.container {
+  width: 100%;
+  background-color: rgba(255, 145, 182, 0.43);
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
