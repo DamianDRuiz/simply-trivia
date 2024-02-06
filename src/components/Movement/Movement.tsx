@@ -1,40 +1,78 @@
 import { useEffect } from 'react';
-import styles from './Movement.module.scss';
 
 class Guy {
   elem: HTMLDivElement | null;
+  style;
   speed: number;
   posX: number;
   posY: number;
-  moveInterval: NodeJS.Timer | undefined;
+  moveIntervalX: NodeJS.Timer | undefined;
+  moveIntervalY: NodeJS.Timer | undefined;
 
   constructor() {
     this.elem = document.querySelector('#guy');
     this.speed = 5;
     this.posX = 0;
     this.posY = 0;
+    this.style = {
+      background: 'red',
+      display: 'inline-block',
+      position: 'absolute',
+      width: '50px',
+      height: '50px',
+      top: '0',
+      left: '0',
+    };
 
     if (this.elem == null) return;
 
     this.init();
-    this.events();
   }
 
   init() {
     if (this.elem == null) return;
-    this.elem.style.backgroundColor = 'red';
+    this.stylize(this.elem, this.style);
+    this.eventListeners();
   }
 
-  events() {
+  stylize(e: HTMLDivElement, styles: Styles) {
+    for (const property in styles) e.style[property as any] = styles[property];
+  }
+
+  eventListeners() {
     document.addEventListener('keydown', (event) => {
-      if (this.moveInterval != undefined) return;
-      this.moveInterval = setInterval(() => {
-        this.move(event.key);
-      }, 50);
+      if (event.key == 'ArrowLeft' || event.key == 'ArrowRight') {
+        if (this.moveIntervalX != undefined) return;
+        this.moveIntervalX = setInterval(() => {
+          this.move(event.key);
+        }, 50);
+      } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+        if (this.moveIntervalY != undefined) return;
+        this.moveIntervalY = setInterval(() => {
+          this.move(event.key);
+        }, 50);
+      }
     });
+
     document.addEventListener('keyup', (event) => {
-      clearInterval(this.moveInterval);
-      this.moveInterval = undefined;
+      switch (event.key) {
+        case 'ArrowRight':
+          clearInterval(this.moveIntervalX);
+          this.moveIntervalX = undefined;
+          break;
+        case 'ArrowLeft':
+          clearInterval(this.moveIntervalX);
+          this.moveIntervalX = undefined;
+          break;
+        case 'ArrowDown':
+          clearInterval(this.moveIntervalY);
+          this.moveIntervalY = undefined;
+          break;
+        case 'ArrowUp':
+          clearInterval(this.moveIntervalY);
+          this.moveIntervalY = undefined;
+          break;
+      }
     });
   }
 
@@ -62,20 +100,15 @@ class Guy {
 }
 
 export function Movement() {
-  const start = () => {
-    const guy = new Guy();
-  };
+  useEffect(() => {
+    new Guy();
+  }, []);
 
-  useEffect(start, []);
-  return (
-    <div className={`${styles.container}`}>
-      <h1>Welcome to Movement!</h1>
-      <div id="guy" className={`${styles.guy}`}></div>
-      <button className={`${styles.start}`} onClick={start}>
-        Start
-      </button>
-    </div>
-  );
+  return <div id="guy"></div>;
 }
+
+type Styles = {
+  [key: string]: string;
+};
 
 export default Movement;
