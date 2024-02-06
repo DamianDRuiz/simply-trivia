@@ -4,20 +4,22 @@ type Styles = {
   [key: string]: string;
 };
 
-type KeyMapping = { [key: string]: string };
+type KeyMappings = { [key: string]: string };
+
+type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
 class Guy {
-  elem: HTMLDivElement;
-  style: Styles;
-  tickInterval: number;
-  speed: number;
-  posX: number;
-  posY: number;
-  moveIntervalX?: NodeJS.Timeout;
-  moveIntervalY?: NodeJS.Timeout;
-  keyMapping: KeyMapping;
+  private elem: HTMLDivElement;
+  private readonly style: Styles;
+  private readonly tickInterval: number;
+  private readonly speed: number;
+  private posX: number;
+  private posY: number;
+  private moveIntervalX?: NodeJS.Timeout;
+  private moveIntervalY?: NodeJS.Timeout;
+  private readonly keyMappings: KeyMappings;
 
-  constructor(element: string, keyMapping?: KeyMapping) {
+  constructor(element: string, keyMapping?: KeyMappings) {
     this.elem = document.querySelector(`#${element}`) as HTMLDivElement;
     this.tickInterval = 10;
     this.speed = 5;
@@ -32,7 +34,7 @@ class Guy {
       top: '0',
       left: '0',
     };
-    this.keyMapping = keyMapping || {
+    this.keyMappings = keyMapping || {
       ArrowUp: 'ArrowUp',
       ArrowDown: 'ArrowDown',
       ArrowLeft: 'ArrowLeft',
@@ -43,8 +45,12 @@ class Guy {
   }
 
   private init(): void {
-    this.stylize(this.elem, this.style);
+    this.stylize();
     this.eventListeners();
+  }
+
+  private stylize(): void {
+    Object.assign(this.elem.style, this.style);
   }
 
   private eventListeners(): void {
@@ -52,12 +58,8 @@ class Guy {
     document.addEventListener('keyup', this.handleKeyRelease.bind(this));
   }
 
-  private stylize(element: HTMLElement, styles: Styles): void {
-    Object.assign(element.style, styles);
-  }
-
   private mapKey(key: string): string {
-    return this.keyMapping[key];
+    return this.keyMappings[key];
   }
 
   private handleKeyPress(event: KeyboardEvent): void {
@@ -72,15 +74,15 @@ class Guy {
   private handleKeyRelease(event: KeyboardEvent): void {
     const key = this.mapKey(event.key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
-      this.clearXInterval();
+      this.clearInterval('moveIntervalX');
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
-      this.clearYInterval();
+      this.clearInterval('moveIntervalY');
     }
   }
 
   private startMovementInterval(
     key: string,
-    intervalName: 'moveIntervalX' | 'moveIntervalY'
+    intervalName: IntervalDirection
   ): void {
     if (this[intervalName] !== undefined) return;
     this[intervalName] = setInterval(() => {
@@ -108,14 +110,9 @@ class Guy {
     this.elem.style.top = this.posY + 'px';
   }
 
-  private clearXInterval(): void {
-    clearInterval(this.moveIntervalX);
-    this.moveIntervalX = undefined;
-  }
-
-  private clearYInterval(): void {
-    clearInterval(this.moveIntervalY);
-    this.moveIntervalY = undefined;
+  private clearInterval(interval: IntervalDirection): void {
+    clearInterval(this[interval]);
+    this[interval] = undefined;
   }
 }
 
