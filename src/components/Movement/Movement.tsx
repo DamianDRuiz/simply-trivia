@@ -52,43 +52,43 @@ class Guy {
   }
 
   private eventListeners(): void {
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
-    document.addEventListener('keyup', this.handleKeyUp.bind(this));
+    document.addEventListener('keydown', this.handleKeyPress.bind(this));
+    document.addEventListener('keyup', this.handleKeyRelease.bind(this));
   }
 
-  private getMappedKey(key: string): string {
+  private mapKey(key: string): string {
     return this.keyMapping[key];
   }
 
-  private handleKeyDown(event: KeyboardEvent): void {
-    const key = this.getMappedKey(event.key);
+  private handleKeyPress(event: KeyboardEvent): void {
+    const key = this.mapKey(event.key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
-      this.handleMovement(key, 'moveIntervalX');
+      this.startMovementInterval(key, 'moveIntervalX');
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
-      this.handleMovement(key, 'moveIntervalY');
+      this.startMovementInterval(key, 'moveIntervalY');
     }
   }
 
-  private handleKeyUp(event: KeyboardEvent): void {
-    const key = this.getMappedKey(event.key);
+  private handleKeyRelease(event: KeyboardEvent): void {
+    const key = this.mapKey(event.key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
-      this.clearIntervalX();
+      this.clearXInterval();
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
-      this.clearIntervalY();
+      this.clearYInterval();
     }
   }
 
-  private handleMovement(
+  private startMovementInterval(
     key: string,
     intervalName: 'moveIntervalX' | 'moveIntervalY'
   ): void {
     if (this[intervalName] !== undefined) return;
     this[intervalName] = setInterval(() => {
-      this.move(key);
+      this.updatePosition(key);
     }, this.tickInterval);
   }
 
-  private move(key: string): void {
+  private updatePosition(key: string): void {
     switch (key) {
       case 'ArrowRight':
         this.posX += this.speed;
@@ -108,12 +108,12 @@ class Guy {
     this.elem.style.top = this.posY + 'px';
   }
 
-  private clearIntervalX(): void {
+  private clearXInterval(): void {
     clearInterval(this.moveIntervalX);
     this.moveIntervalX = undefined;
   }
 
-  private clearIntervalY(): void {
+  private clearYInterval(): void {
     clearInterval(this.moveIntervalY);
     this.moveIntervalY = undefined;
   }
