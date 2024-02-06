@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-interface Styles {
+type Styles = {
   [key: string]: string;
-}
+};
 
 type KeyMapping = { [key: string]: string };
 
@@ -61,12 +61,20 @@ class Guy {
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
-    let { key } = event;
-    key = this.getMappedKey(key);
+    const key = this.getMappedKey(event.key);
     if (['ArrowLeft', 'ArrowRight'].includes(key)) {
       this.handleMovement(key, 'moveIntervalX');
     } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
       this.handleMovement(key, 'moveIntervalY');
+    }
+  }
+
+  private handleKeyUp(event: KeyboardEvent): void {
+    const key = this.getMappedKey(event.key);
+    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
+      this.clearIntervalX();
+    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
+      this.clearIntervalY();
     }
   }
 
@@ -78,16 +86,6 @@ class Guy {
     this[intervalName] = setInterval(() => {
       this.move(key);
     }, this.tickInterval);
-  }
-
-  private handleKeyUp(event: KeyboardEvent): void {
-    let { key } = event;
-    key = this.getMappedKey(key);
-    if (['ArrowLeft', 'ArrowRight'].includes(key)) {
-      this.clearIntervalX();
-    } else if (['ArrowUp', 'ArrowDown'].includes(key)) {
-      this.clearIntervalY();
-    }
   }
 
   private move(key: string): void {
