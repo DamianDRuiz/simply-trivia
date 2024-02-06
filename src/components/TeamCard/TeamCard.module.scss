@@ -21,3 +21,31 @@
 .container:nth-of-type(even) .inner {
   margin-left: 0;
 }
+
+.name {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.score {
+  margin-bottom: 20px;
+}
+
+.button {
+  width: 100%;
+  display: block;
+  height: 50px;
+  font-size: 50px;
+  line-height: 30px;
+  font-weight: bold;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  text-shadow: 0px 0px 3px #000;
+}
+
+.button + .button {
+  margin-top: 10px;
+  line-height: 5px;
+}

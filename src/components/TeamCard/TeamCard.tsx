@@ -14,10 +14,17 @@ export function TeamCard({ teamData, id, dispatch }: TeamCardProps) {
   return (
     <div className={`${styles.container}`}>
       <div className={`${styles.inner}`}>
-        <h2>{teamData.name}</h2> <strong>Score: {teamData.score}</strong>
+        <h2 className={`${styles.name}`}>{teamData.name}</h2>{' '}
+        <div className={`${styles.score}`}>
+          <strong>Score: {teamData.score}</strong>
+        </div>
         <div>
-          <button onClick={increment}>+</button>
-          <button onClick={decrement}>-</button>
+          <button className={`${styles.button}`} onClick={increment}>
+            +
+          </button>
+          <button className={`${styles.button}`} onClick={decrement}>
+            -
+          </button>
         </div>
       </div>
     </div>
