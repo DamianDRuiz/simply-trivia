@@ -47,13 +47,13 @@ class Guy {
     this.eventListeners();
   }
 
-  private stylize(element: HTMLElement, styles: Styles): void {
-    Object.assign(element.style, styles);
-  }
-
   private eventListeners(): void {
     document.addEventListener('keydown', this.handleKeyPress.bind(this));
     document.addEventListener('keyup', this.handleKeyRelease.bind(this));
+  }
+
+  private stylize(element: HTMLElement, styles: Styles): void {
+    Object.assign(element.style, styles);
   }
 
   private mapKey(key: string): string {
