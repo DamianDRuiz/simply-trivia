@@ -4,7 +4,9 @@ type Styles = {
   [key: string]: string;
 };
 
-type KeyMappings = { [key: string]: string };
+type KeyMappings = {
+  [key: string]: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
+};
 
 type IntervalDirection = 'moveIntervalX' | 'moveIntervalY';
 
